@@ -26,7 +26,9 @@ public class Tag extends JavaPlugin {
         config = new ConfigurationManager(null, "config.yml", false);
         messages = new ConfigurationManager(null,"messages.yml", false);
 
-        manager = new TagsManager();
+        manager = new TagsManager(config.getConfig());
+        manager.loadTags("Tags");
+        manager.runUpdateTask();
 
         getCommand("tag").setExecutor(new TagCommand());
         Bukkit.getPluginManager().registerEvents(new JoinEvent(), this);
@@ -37,5 +39,9 @@ public class Tag extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().severe("Plugin desativado com sucesso.");
+    }
+
+    public TagsManager getManager() {
+        return manager;
     }
 }
