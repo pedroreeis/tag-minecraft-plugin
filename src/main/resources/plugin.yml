@@ -1,0 +1,6 @@
+name: queenTags
+version: 1.0
+main: com.queendev.tag.Tag
+author: queenDEV_
+commands:
+  tag:
