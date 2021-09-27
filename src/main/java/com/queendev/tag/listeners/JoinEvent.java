@@ -12,12 +12,6 @@ public class JoinEvent implements Listener {
     @EventHandler
     void playerJoinEvent(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-
-        if (p.getScoreboard().getObjectives().isEmpty()){
-            p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
-        p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        Tag.getPlugin().getManager().update(p.getScoreboard(), p);
+        Tag.getPlugin().getManager().update(p);
     }
-
 }

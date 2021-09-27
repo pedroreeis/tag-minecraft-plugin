@@ -1,27 +1,17 @@
-defaultTag: "Membro"
-
-Tags:
+Tags: #Faça as tags do maior pro menor!
   Dono:
     permission: "tag.dono"
     prefix: "&4&lDONO &4"
-    position: a
+    position: a #Prioridade no TAB;
   Gerente:
     permission: "tag.gerente"
     prefix: "&4&lGERENTE &4"
-    position: b
-  Admin:
-    permission: "tag.admin"
-    prefix: "&c&lADMIN &c"
-    position: c
-  Mod:
-    permission: "tag.mod"
-    prefix: "&2&lMODERADOR &2"
-    position: d
+    position: b #Prioridade no TAB;
   Ajudante:
     permission: "tag.ajudante"
     prefix: "&e&lAJUDANTE &e"
-    position: e
+    position: c #Prioridade no TAB;
   Membro:
     permission: "tag.membro"
     prefix: "&7&lMEMBRO &7"
-    position: f
+    position: d #Prioridade no TAB;

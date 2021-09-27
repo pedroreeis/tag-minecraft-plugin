@@ -8,7 +8,6 @@ public class TagModel {
     private String permission;
     private String prefix;
     private String position;
-    private Team team;
 
     public TagModel(String name) {
         this.name = name;
@@ -40,13 +39,5 @@ public class TagModel {
 
     public void setPosition(String position) {
         this.position = position;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
     }
 }

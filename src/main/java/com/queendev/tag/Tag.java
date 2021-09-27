@@ -28,7 +28,6 @@ public class Tag extends JavaPlugin {
 
         manager = new TagsManager(config.getConfig());
         manager.loadTags();
-        manager.runUpdateTask();
 
         getCommand("tag").setExecutor(new TagCommand());
         Bukkit.getPluginManager().registerEvents(new JoinEvent(), this);

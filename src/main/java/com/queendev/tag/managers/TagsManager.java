@@ -21,27 +21,12 @@ public class TagsManager {
     private HashMap<String, TagModel> tags;
     private HashMap<String, PlayerTagModel> users;
 
-    private TagModel defaultTag;
-    private Scoreboard mainScore;
-
     public TagsManager(FileConfiguration config) {
         this.config = config;
 
         tags = new HashMap<>();
         users = new HashMap<>();
 
-        mainScore = Bukkit.getScoreboardManager().getMainScoreboard();
-    }
-
-    public void runUpdateTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    update(player.getScoreboard(), player);
-                }
-            }
-        }.runTaskTimerAsynchronously(Tag.getPlugin(), 0L, 20L * 60L);
     }
 
     public PlayerTagModel getPlayerOrCreate(Player p) {
@@ -51,25 +36,19 @@ public class TagsManager {
         }
 
         PlayerTagModel user = new PlayerTagModel(p.getName());
-        user.setTag(defaultTag);
         return user;
     }
 
-    public void update(Scoreboard sb,Player p) {
+    public void update(Player p) {
         TagModel newTag = null;
         PlayerTagModel playerTag = getPlayerOrCreate(p);
 
         for(TagModel tag : tags.values()) {
             if(p.hasPermission(tag.getPermission())) {
                 playerTag.setTag(tag);
-                tag.getTeam().addPlayer(p);
                 newTag = tag;
             }
         }
-
-        if(newTag == null) playerTag.setTag(defaultTag);
-
-        p.setDisplayName(playerTag.getTag().getPrefix() + p.getName());
     }
 
     public void loadTags() {
@@ -79,7 +58,6 @@ public class TagsManager {
 
             for (String id : section.getKeys(false)) {
                 String path = "Tags." + id + ".";
-                id = id.toLowerCase();
 
                 ConfigurationSection key = config.getConfigurationSection("Tags." + id);
 
@@ -87,24 +65,11 @@ public class TagsManager {
                 String permission = key.getString("permission");
                 String position = key.getString("position");
 
-
-                Team teamScore = mainScore.registerNewTeam(position);
-                teamScore.setPrefix(prefix);
-                teamScore.setNameTagVisibility(NameTagVisibility.ALWAYS);
-
                 TagModel tag = new TagModel(id);
                 tag.setPrefix(prefix);
                 tag.setPermission(permission);
                 tag.setPosition(position);
-                tag.setTeam(teamScore);
-                tags.put(tag.getName(), tag);
-            }
-
-            TagModel defaultTag = getTag(config.getString("defaultTag"));
-            if (defaultTag != null) {
-                this.defaultTag = defaultTag;
-            } else {
-                Bukkit.getConsoleSender().sendMessage("§cNão foi identificado nada em 'defaultTag' na config.yml, coloque o grupo padrão para solucionar este problema!");
+                tags.put(tag.getName().toLowerCase(), tag);
             }
         } else {
             Bukkit.getConsoleSender().sendMessage("§cConfig.yml está incompleta, delete e gere uma nova!!!!");

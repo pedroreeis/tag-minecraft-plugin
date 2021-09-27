@@ -1,4 +1,5 @@
 Mensagens:
-  errorConsole: ""
-  noPermission: ""
-  sucessoChange: ""
+  errorConsole: "&cEste comando não pode ser executado no console."
+  noPermission: "&c* Você não tem permissão suficiente para executar esse comando."
+  noArgs: "&c* Use: /tag <list/tag>"
+  sucessoChange: "&aSua tag foi alterada para: %tag%"
