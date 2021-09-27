@@ -8,21 +8,29 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.NameTagVisibility;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 public class TagsManager {
 
     private final FileConfiguration config;
 
-    private HashMap<String, TagModel> tags = new HashMap<>();
-    private HashMap<String, PlayerTagModel> users = new HashMap<>();
+    private HashMap<String, TagModel> tags;
+    private HashMap<String, PlayerTagModel> users;
 
     private TagModel defaultTag;
+    private Scoreboard mainScore;
 
     public TagsManager(FileConfiguration config) {
         this.config = config;
+
+        tags = new HashMap<>();
+        users = new HashMap<>();
+
+        mainScore = Bukkit.getScoreboardManager().getMainScoreboard();
     }
 
     public void runUpdateTask() {
@@ -30,7 +38,7 @@ public class TagsManager {
             @Override
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    update(player);
+                    update(player.getScoreboard(), player);
                 }
             }
         }.runTaskTimerAsynchronously(Tag.getPlugin(), 0L, 20L * 60L);
@@ -47,39 +55,51 @@ public class TagsManager {
         return user;
     }
 
-    public void update(Player p) {
+    public void update(Scoreboard sb,Player p) {
         TagModel newTag = null;
         PlayerTagModel playerTag = getPlayerOrCreate(p);
+
         for(TagModel tag : tags.values()) {
             if(p.hasPermission(tag.getPermission())) {
                 playerTag.setTag(tag);
+                tag.getTeam().addPlayer(p);
                 newTag = tag;
             }
         }
+
         if(newTag == null) playerTag.setTag(defaultTag);
-        p.setPlayerListName(playerTag.getTag().getPrefix() + p.getName());
+
         p.setDisplayName(playerTag.getTag().getPrefix() + p.getName());
     }
 
-    public void updateAllTags() {
-        Bukkit.getOnlinePlayers().forEach(this::update);
-    }
-
-    public void loadTags(String sectionName) {
-        ConfigurationSection section = config.getConfigurationSection(sectionName);
+    public void loadTags() {
+        ConfigurationSection section = config.getConfigurationSection("Tags");
         if (section != null) {
             tags.clear();
+
             for (String id : section.getKeys(false)) {
                 String path = "Tags." + id + ".";
                 id = id.toLowerCase();
-                String prefix = config.getString(path + "prefix").replace("&", "§");
-                String permission = config.getString(path + "permission");
+
+                ConfigurationSection key = config.getConfigurationSection("Tags." + id);
+
+                String prefix = key.getString("prefix").replace("&", "§");
+                String permission = key.getString("permission");
+                String position = key.getString("position");
+
+
+                Team teamScore = mainScore.registerNewTeam(position);
+                teamScore.setPrefix(prefix);
+                teamScore.setNameTagVisibility(NameTagVisibility.ALWAYS);
 
                 TagModel tag = new TagModel(id);
                 tag.setPrefix(prefix);
                 tag.setPermission(permission);
+                tag.setPosition(position);
+                tag.setTeam(teamScore);
                 tags.put(tag.getName(), tag);
             }
+
             TagModel defaultTag = getTag(config.getString("defaultTag"));
             if (defaultTag != null) {
                 this.defaultTag = defaultTag;

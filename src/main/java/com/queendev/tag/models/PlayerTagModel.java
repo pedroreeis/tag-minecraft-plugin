@@ -23,5 +23,6 @@ public class PlayerTagModel {
 
     public void setTag(TagModel tag) {
         this.tag = tag;
+
     }
 }

@@ -4,18 +4,24 @@ Tags:
   Dono:
     permission: "tag.dono"
     prefix: "&4&lDONO &4"
+    position: a
   Gerente:
     permission: "tag.gerente"
     prefix: "&4&lGERENTE &4"
+    position: b
   Admin:
     permission: "tag.admin"
     prefix: "&c&lADMIN &c"
+    position: c
   Mod:
     permission: "tag.mod"
     prefix: "&2&lMODERADOR &2"
+    position: d
   Ajudante:
     permission: "tag.ajudante"
     prefix: "&e&lAJUDANTE &e"
+    position: e
   Membro:
     permission: "tag.membro"
     prefix: "&7&lMEMBRO &7"
+    position: f

@@ -27,7 +27,7 @@ public class Tag extends JavaPlugin {
         messages = new ConfigurationManager(null,"messages.yml", false);
 
         manager = new TagsManager(config.getConfig());
-        manager.loadTags("Tags");
+        manager.loadTags();
         manager.runUpdateTask();
 
         getCommand("tag").setExecutor(new TagCommand());
